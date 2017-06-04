@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TodoApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace TodoApi.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     public class TodoController : Controller
     {
         private readonly TodoContext _context;
@@ -59,7 +61,7 @@ namespace TodoApi.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]TodoItem item)
+        public void Update(int id, [FromBody]TodoItem item)
         {
 
 

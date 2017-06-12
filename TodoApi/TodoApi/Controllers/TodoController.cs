@@ -17,16 +17,19 @@ namespace TodoApi.Controllers
         public TodoController(TodoContext context)
         {
             _context = context;
+
             if(_context.TodoItems.Count() == 0)
             {
                 _context.TodoItems.Add(new TodoItem { Name = "Item1" });
                 _context.SaveChanges();
             }
         }
+
         // GET: api/values
         [HttpGet]
         public IEnumerable<TodoItem> GetAll()
         {
+            
             return _context.TodoItems.ToList<TodoItem>();
         }
 
@@ -61,14 +64,42 @@ namespace TodoApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody]TodoItem item)
         {
+            if(item == null || item.Id != id)
+            {
+                return BadRequest();
+            }
 
+            var result = _context.TodoItems.FirstOrDefault(t => t.Id == id);
+            if(result == null)
+            {
+                return NotFound();
+            }
+
+            result.IsComplete = item.IsComplete;
+            result.Name = item.Name;
+
+            _context.TodoItems.Update(result);
+            _context.SaveChanges();
+
+            return new NoContentResult();
 
         }
 
         // DELETE api/values/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            var result = _context.TodoItems.FirstOrDefault(t => t.Id == id);
+
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            _context.TodoItems.Remove(result);
+            _context.SaveChanges();
+
+            return new NoContentResult();
         }
     }
 }

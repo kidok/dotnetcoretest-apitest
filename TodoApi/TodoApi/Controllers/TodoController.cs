@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 namespace TodoApi.Controllers
 {
     [Route("api/[controller]")]
-    [Authorize]
     public class TodoController : Controller
     {
         private readonly TodoContext _context;
@@ -64,7 +63,7 @@ namespace TodoApi.Controllers
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public void Update(int id, [FromBody]TodoItem item)
+        public IActionResult Update(int id, [FromBody]TodoItem item)
         {
             if(item == null || item.Id != id)
             {
